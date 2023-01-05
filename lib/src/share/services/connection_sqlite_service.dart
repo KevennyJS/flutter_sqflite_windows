@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../dao/client_sql.dart';
+import '../dao/sql.dart';
 import 'package:path/path.dart';
 
 class ConnectionSQLiteService {
@@ -14,7 +14,7 @@ class ConnectionSQLiteService {
     return _instance!;
   }
 
-  static const String _databaseName = 'database_project';
+  static const String _databaseName = 'database_project.db';
   static const int _databaseVersion = 1;
   Database? _db;
 
@@ -36,7 +36,7 @@ class ConnectionSQLiteService {
 
   Future<void> _onCreate(Database db, int version) async {
     db.transaction((reference) async{
-      reference.execute(ConnectionSQL.CREATE_DATABASE);
+      reference.execute(ConnectionSQL.createDatabase);
     });
   }
 
