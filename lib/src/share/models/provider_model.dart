@@ -18,13 +18,13 @@ class ProviderModel {
   });
 
   factory ProviderModel.fromSQLite(Map map)=> ProviderModel(
-    id: map['id'],
-    name: map['nome'],
-    cnpj: map['cnpj'],
-    phone: map['telefone'],
-    address: map['endereco'],
-    district: map['bairro'],
-    cep: map['cep'],
+    id: map['ID'],
+    name: map['NOME'],
+    cnpj: map['CNPJ'],
+    phone: map['TELEFONE'],
+    address: map['ENDERECO'],
+    district: map['BAIRRO'],
+    cep: map['CEP'],
   );
 
   static List<ProviderModel> fromSQLiteList(List list) => list.map((e) => ProviderModel.fromSQLite(e)).toList();

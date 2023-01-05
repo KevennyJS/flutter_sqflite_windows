@@ -17,20 +17,19 @@ class ClientModel {
     required this.cep,
   });
 
-  factory ClientModel.fromSQLite(Map map)=> ClientModel(
-    id: map['id'],
-    name: map['nome'],
-    cpf: map['cpf'],
-    phone: map['telefone'],
-    address: map['endereco'],
-    district: map['bairro'],
-    cep: map['cep'],
+  factory ClientModel.fromSQLite(Map map) => ClientModel(
+    id: map['ID'],
+    name: map['NOME'],
+    cpf: map['CPF'],
+    phone: map['TELEFONE'],
+    address: map['ENDERECO'],
+    district: map['BAIRRO'],
+    cep: map['CEP'],
   );
 
   static List<ClientModel> fromSQLiteList(List list) => list.map((e) => ClientModel.fromSQLite(e)).toList();
 
-  List toSQLiteList()=> [
-    id,
+  List toSQLiteInsert()=> [
     name,
     cpf,
     phone,
@@ -38,4 +37,24 @@ class ClientModel {
     district,
     cep,
   ];
+
+  List toSQLiteListUpdate()=> [
+    name,
+    cpf,
+    phone,
+    address,
+    district,
+    cep,
+    id,
+  ];
+
+  factory ClientModel.empty()=> ClientModel(
+    id: null,
+    name: '',
+    cpf: '',
+    phone: '',
+    address: '',
+    district: '',
+    cep: '',
+  );
 }

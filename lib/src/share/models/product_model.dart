@@ -14,11 +14,11 @@ class Product {
   });
 
   factory Product.fromSQLite(Map map)=> Product(
-    id: map['id'],
-    name: map['nome'],
-    price: map['preco'],
-    quantity: map['quantidade'],
-    description: map['descricao'],
+    id: map['ID'],
+    name: map['NOME'],
+    price: map['PRECO'],
+    quantity: map['QUANTIDADE'],
+    description: map['DESCRICAO'],
   );
 
   static List<Product> fromSQLiteList(List list) => list.map((e) => Product.fromSQLite(e)).toList();

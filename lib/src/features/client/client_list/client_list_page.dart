@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sqflite_windows/src/share/dao/client_dao.dart';
 import '../../../share/models/client_model.dart';
 
 class ClientListPage extends StatefulWidget {
@@ -9,11 +10,22 @@ class ClientListPage extends StatefulWidget {
 }
 
 class _ClientListPageState extends State<ClientListPage> {
-  List<ClientModel> clients = [
-    ClientModel(id: 1, name: 'João', cpf: '123.456.789-00', phone: '(11) 99999-9999', address: 'Rua das Flores', district: 'Centro', cep: '12345-678'),
-    ClientModel(id: 2, name: 'Maria', cpf: '123.456.789-00', phone: '(11) 99999-9999', address: 'Rua das Flores', district: 'Centro', cep: '12345-678'),
-    ClientModel(id: 3, name: 'José', cpf: '123.456.789-00', phone: '(11) 99999-9999', address: 'Rua das Flores', district: 'Centro', cep: '12345-678'),
-  ];
+  List<ClientModel> clients = [];
+  final ClientDao _clientDao = ClientDao();
+
+  void selectAllClients() async {
+    try{
+      clients = await _clientDao.selectAll();
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Erro ao buscar clientes")));
+    }
+  }
+
+  @override
+  void initState() {
+    selectAllClients();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +44,19 @@ class _ClientListPageState extends State<ClientListPage> {
               icon: const Icon(Icons.delete),
               onPressed: () {},
             ),
-            onTap: (){
-              Navigator.pushNamed(context, '/edit_client', arguments: client);
+            onTap: () async {
+              await Navigator.pushNamed(context, '/edit_client', arguments: client).then((value) => selectAllClients());
+              setState(() {});
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Navigator.pushNamed(context, '/edit_client').then((value) => selectAllClients()).then((value) => selectAllClients());
+          setState(() {});
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

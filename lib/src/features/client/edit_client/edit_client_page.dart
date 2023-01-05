@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_sqflite_windows/src/share/dao/client_dao.dart';
 import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 
 class EditClientPage extends StatefulWidget {
-  final ClientModel? client;
-  const EditClientPage({super.key, this.client});
+  const EditClientPage({super.key});
 
   @override
   State<EditClientPage> createState() => _EditClientPageState();
@@ -19,19 +19,85 @@ class _EditClientPageState extends State<EditClientPage> {
   final TextEditingController _districtController = TextEditingController();
   final TextEditingController _cepController = TextEditingController();
 
+  ClientModel client = ClientModel.empty();
+  final ClientDao _clientDao = ClientDao();
+
+  void save() {
+    client.name = _nameController.text;
+    client.cpf = _cpfController.text;
+    client.phone = _phoneController.text;
+    client.address = _addressController.text;
+    client.district = _districtController.text;
+    client.cep = _cepController.text;
+
+    if (client.id == null) {
+      insertClient();
+      return;
+    }
+    updateClient();
+  }
+
+  void insertClient() async {
+    try {
+      ClientModel insertedClient = await _clientDao.insert(client);
+      client.id = insertedClient.id;
+      mostrarMensagem('Cliente inserido com sucesso');
+      setState(() {});
+    } catch (error) {
+      print(error);
+      mostrarMensagem('Erro ao inserir cliente');
+    }
+  }
+
+  void updateClient() async {
+    try {
+      if (await _clientDao.update(client)) {
+        mostrarMensagem("Cliente atualizado com sucesso");
+        return;
+      }
+      mostrarMensagem('Nenhum dado foi alterado');
+    } catch (error) {
+      mostrarMensagem('Erro ao atualizar cliente');
+    }
+  }
+
+  void deleteClient() async {
+    try {
+      if (client.id == null) {
+        mostrarMensagem('Impossivel deletar cliente não cadastrado');
+        return;
+      }
+      if (await _clientDao.delete(client)) {
+        mostrarMensagem("Cliente excluído com sucesso");
+        Navigator.pop(context);
+        return;
+      }
+      mostrarMensagem('Nenhum cliente foi deletado');
+    } catch (error) {
+      mostrarMensagem('Erro ao excluir cliente');
+    }
+  }
+
+  void mostrarMensagem(String mensagem) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
+  }
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
-    ClientModel? client = ModalRoute.of(context)!.settings.arguments as ClientModel?;
-    if (client != null) {
-      _nameController.text = client.name;
-      _cpfController.text = client.cpf;
-      _phoneController.text = client.phone;
-      _addressController.text = client.address;
-      _districtController.text = client.district;
-      _cepController.text = client.cep;
+    ClientModel? clientParameter = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as ClientModel?;
+    if (clientParameter != null) {
+      _nameController.text = clientParameter.name;
+      _cpfController.text = clientParameter.cpf;
+      _phoneController.text = clientParameter.phone;
+      _addressController.text = clientParameter.address;
+      _districtController.text = clientParameter.district;
+      _cepController.text = clientParameter.cep;
+      client = clientParameter;
     }
+    super.didChangeDependencies();
   }
 
   @override
@@ -120,13 +186,25 @@ class _EditClientPageState extends State<EditClientPage> {
                   return null;
                 },
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Validado com sucesso')));
-                  }
-                },
-                child: const Text('Enviar'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        save();
+                      }
+                    },
+                    child: const Text('Enviar'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: client.id != null ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: client.id != null ? () => deleteClient() : null,
+                    child: const Text('Excluir'),
+                  ),
+                ],
               ),
             ],
           ),

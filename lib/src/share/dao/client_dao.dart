@@ -8,10 +8,10 @@ class ClientDao {
 
   Future<Database> _getDatabase() async => await _connection.db;
 
-  Future<ClientModel> add(ClientModel client) async {
+  Future<ClientModel> insert(ClientModel client) async {
     try {
       Database db = await _getDatabase();
-      int id = await db.rawInsert(ConnectionSQL.addClient(), client.toSQLiteList());
+      int id = await db.rawInsert(ConnectionSQL.addClient(), client.toSQLiteInsert());
       client.id = id;
       return client;
     } catch (error) {
@@ -22,7 +22,7 @@ class ClientDao {
   Future<bool> update(ClientModel client) async {
     try {
       Database db = await _getDatabase();
-      int result = await db.rawUpdate(ConnectionSQL.updateClient(), client.toSQLiteList());
+      int result = await db.rawUpdate(ConnectionSQL.updateClient(), client.toSQLiteListUpdate());
       return result > 0;
     } catch (error) {
       throw Exception();
@@ -39,10 +39,10 @@ class ClientDao {
     }
   }
 
-  Future<bool> delete() async {
+  Future<bool> delete(ClientModel client) async {
     try {
       Database db = await _getDatabase();
-      int result = await db.rawDelete(ConnectionSQL.deleteClient());
+      int result = await db.rawDelete(ConnectionSQL.deleteClient(), [client.id]);
       return result > 0;
     } catch (error) {
       throw Exception();
