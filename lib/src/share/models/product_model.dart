@@ -2,14 +2,14 @@ class Product {
   int? id;
   String name;
   double price;
-  double quantity;
+  double stock;
   String description;
 
   Product({
     this.id,
     required this.name,
     required this.price,
-    required this.quantity,
+    required this.stock,
     required this.description,
   });
 
@@ -17,7 +17,7 @@ class Product {
     id: map['ID'],
     name: map['NOME'],
     price: map['PRECO'],
-    quantity: map['QUANTIDADE'],
+    stock: map['ESTOQUE'],
     description: map['DESCRICAO'],
   );
 
@@ -27,7 +27,7 @@ class Product {
     id,
     name,
     price,
-    quantity,
+    stock,
     description,
   ];
 }

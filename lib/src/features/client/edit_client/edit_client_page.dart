@@ -84,10 +84,7 @@ class _EditClientPageState extends State<EditClientPage> {
 
   @override
   void didChangeDependencies() {
-    ClientModel? clientParameter = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as ClientModel?;
+    ClientModel? clientParameter = ModalRoute.of(context)!.settings.arguments as ClientModel?;
     if (clientParameter != null) {
       _nameController.text = clientParameter.name;
       _cpfController.text = clientParameter.cpf;

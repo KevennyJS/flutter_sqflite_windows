@@ -1,7 +1,7 @@
-import 'package:flutter_sqflite_windows/src/share/dao/sql.dart';
-import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 import 'package:flutter_sqflite_windows/src/share/services/connection_sqlite_service.dart';
+import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 import 'package:sqflite/sqflite.dart';
+import 'sql.dart';
 
 class ClientDao {
   final ConnectionSQLiteService _connection = ConnectionSQLiteService.instance;
