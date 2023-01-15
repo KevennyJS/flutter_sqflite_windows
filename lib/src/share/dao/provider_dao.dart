@@ -22,7 +22,7 @@ class ProviderDao{
   Future<bool> update(ProviderModel provider) async {
     try {
       Database db = await _getDatabase();
-      int result = await db.rawUpdate(ConnectionSQL.updateProvider(), provider.toSQLiteListUpdate());
+      int result = await db.rawUpdate(ConnectionSQL.updateProvider(), provider.toSQLiteUpdate());
       return result > 0;
     } catch (error) {
       throw Exception();

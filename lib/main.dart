@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_windows/src/features/client/edit_client/edit_client_page.dart';
+import 'package:flutter_sqflite_windows/src/features/menu/menu_database/menu_database_page.dart';
 
 import 'src/features/client/client_list/client_list_page.dart';
 
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
       home: const ClientListPage(),
       routes: {
         '/edit_client': (context) => const EditClientPage(),
+        '/client_list': (context) => const ClientListPage(),
+        '/menu_database': (context) => const MenuDatabasePage(),
       },
     );
   }
