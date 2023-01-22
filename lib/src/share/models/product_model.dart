@@ -1,11 +1,11 @@
-class Product {
+class ProductModel {
   int? id;
   String name;
   double price;
   double stock;
   String description;
 
-  Product({
+  ProductModel({
     this.id,
     required this.name,
     required this.price,
@@ -13,7 +13,7 @@ class Product {
     required this.description,
   });
 
-  factory Product.fromSQLite(Map map)=> Product(
+  factory ProductModel.fromSQLite(Map map)=> ProductModel(
     id: map['ID'],
     name: map['NOME'],
     price: map['PRECO'],
@@ -21,7 +21,7 @@ class Product {
     description: map['DESCRICAO'],
   );
 
-  static List<Product> fromSQLiteList(List list) => list.map((e) => Product.fromSQLite(e)).toList();
+  static List<ProductModel> fromSQLiteList(List list) => list.map((e) => ProductModel.fromSQLite(e)).toList();
 
   List toSQLiteList()=> [
     id,
@@ -30,4 +30,20 @@ class Product {
     stock,
     description,
   ];
+
+  List toSQLiteInsert()=> [
+    name,
+    price,
+    stock,
+    description,
+  ];
+
+  List toSQLiteListUpdate()=> [
+    name,
+    price,
+    stock,
+    description,
+    id,
+  ];
+
 }

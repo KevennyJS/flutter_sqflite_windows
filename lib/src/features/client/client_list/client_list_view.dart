@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_windows/src/share/dao/client_dao.dart';
 import '../../../share/models/client_model.dart';
 
-class ClientListPage extends StatefulWidget {
-  const ClientListPage({super.key});
+class ClientListView extends StatefulWidget {
+  const ClientListView({super.key});
 
   @override
-  State<ClientListPage> createState() => _ClientListPageState();
+  State<ClientListView> createState() => _ClientListViewState();
 }
 
-class _ClientListPageState extends State<ClientListPage> {
+class _ClientListViewState extends State<ClientListView> {
   List<ClientModel> clients = [];
   final ClientDao _clientDao = ClientDao();
 

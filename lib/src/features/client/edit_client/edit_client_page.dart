@@ -44,7 +44,6 @@ class _EditClientPageState extends State<EditClientPage> {
       mostrarMensagem('Cliente inserido com sucesso');
       setState(() {});
     } catch (error) {
-      print(error);
       mostrarMensagem('Erro ao inserir cliente');
     }
   }

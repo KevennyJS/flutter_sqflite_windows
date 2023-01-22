@@ -123,6 +123,14 @@ class ConnectionSQL{
   SELECT * FROM TB_PAYMENT_METHOD;
   ''';
 
+  static String selectAllSale() => '''
+  SELECT * FROM TB_VENDA;
+  ''';
+
+  static String selectAllBuy() => '''
+  SELECT * FROM TB_COMPRA;
+  ''';
+
   // ====================== DELETE ======================
 
   static String deleteClient() => '''
@@ -159,5 +167,43 @@ class ConnectionSQL{
   SELECT * FROM TB_PAYMENT_METHOD WHERE ID = ?;
   ''';
 
+  // ====================== POPULATION TABLES ======================
+
+  static String populatePaymentMethod() => '''
+  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Dinheiro');
+  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Cartão de Crédito');
+  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Cartão de Débito');
+  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Cheque');
+  ''';
+
+  static String populateProduct() => '''
+  INSERT INTO TB_PRODUTO (NOME, PRECO, ESTOQUE, DESCRICAO) VALUES ('Coca-Cola', 5.00, 10, 'Refrigerante');
+  INSERT INTO TB_PRODUTO (NOME, PRECO, ESTOQUE, DESCRICAO) VALUES ('Pepsi', 5.00, 10, 'Refrigerante');
+  INSERT INTO TB_PRODUTO (NOME, PRECO, ESTOQUE, DESCRICAO) VALUES ('Fanta', 5.00, 10, 'Refrigerante');
+  INSERT INTO TB_PRODUTO (NOME, PRECO, ESTOQUE, DESCRICAO) VALUES ('Sprite', 5.00, 10, 'Refrigerante');
+  ''';
+
+  static String populateClient() => '''
+  INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('João', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
+  INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Maria', '123.456.789-00', '99999-9999', 'Rua 2', 'Bairro 2', '99999-999');
+  INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('José', '123.456.789-00', '99999-9999', 'Rua 3', 'Bairro 3', '99999-999');
+  INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Pedro', '123.456.789-00', '99999-9999', 'Rua 4', 'Bairro 4', '99999-999');
+  ''';
+
+  static String populateProvider() => '''
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 1', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 2', '123.456.789-00', '99999-9999', 'Rua 2', 'Bairro 2', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 3', '123.456.789-00', '99999-9999', 'Rua 3', 'Bairro 3', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 4', '123.456.789-00', '99999-9999', 'Rua 4', 'Bairro 4', '99999-999');
+  ''';
+
+  // ====================== CLEAR ALL TABLES ======================
+
+  static String clearAllTables() => '''
+  DELETE FROM TB_CLIENTE;
+  DELETE FROM TB_PRODUTO;
+  DELETE FROM TB_FORNECEDOR;
+  DELETE FROM TB_PAYMENT_METHOD;
+  ''';
 
 }
