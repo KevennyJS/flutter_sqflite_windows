@@ -1,17 +1,30 @@
-class PaymentMethod {
+class PaymentMethodModel {
   int? id;
   String name;
 
-  PaymentMethod({this.id, required this.name});
+  PaymentMethodModel({this.id, required this.name});
 
-  factory PaymentMethod.fromSQLite(Map map) => PaymentMethod(
+  factory PaymentMethodModel.fromSQLite(Map map) => PaymentMethodModel(
         id: map['ID'],
         name: map['NOME'],
       );
 
-  static List<PaymentMethod> fromSQLiteList(List list) => list.map((e) => PaymentMethod.fromSQLite(e)).toList();
+  static List<PaymentMethodModel> fromSQLiteList(List list) => list.map((e) => PaymentMethodModel.fromSQLite(e)).toList();
 
   List toSQLiteInsert() => [
         name,
       ];
+
+  List toSQLiteUpdate() => [
+        name,
+        id,
+      ];
+
+
+  factory PaymentMethodModel.empty() => PaymentMethodModel(
+        id: null,
+        name: '',
+      );
+
+
 }

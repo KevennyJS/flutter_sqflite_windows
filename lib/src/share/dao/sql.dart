@@ -30,7 +30,7 @@ class ConnectionSQL{
   
   CREATE TABLE `TB_FORMA_PAGAMENTO`(
     `ID` INTEGER PRIMARY KEY AUTOINCREMENT,
-    `NAME` TEXT NOT NULL
+    `NOME` TEXT NOT NULL
   );
   
   CREATE TABLE `TB_VENDA`(
@@ -84,7 +84,7 @@ class ConnectionSQL{
   ''';
 
   static String addPaymentMethod() => '''
-  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES (?);
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES (?);
   ''';
 
   // ====================== UPDATE ======================
@@ -102,7 +102,7 @@ class ConnectionSQL{
   ''';
 
   static String updatePaymentMethod() => '''
-  UPDATE TB_FORMA_PAGAMENTO SET NAME = ? WHERE ID = ?;
+  UPDATE TB_FORMA_PAGAMENTO SET NOME = ? WHERE ID = ?;
   ''';
 
   // ====================== SELECT ALL ======================
@@ -120,7 +120,7 @@ class ConnectionSQL{
   ''';
 
   static String selectAllPaymentMethod() => '''
-  SELECT * FROM TB_PAYMENT_METHOD;
+  SELECT * FROM TB_FORMA_PAGAMENTO;
   ''';
 
   static String selectAllSale() => '''
@@ -146,7 +146,7 @@ class ConnectionSQL{
   ''';
 
   static String deletePaymentMethod() => '''
-  DELETE FROM TB_PAYMENT_METHOD WHERE ID = ?;
+  DELETE FROM TB_FORMA_PAGAMENTO WHERE ID = ?;
   ''';
 
   // ====================== SELECT BY ID ======================
@@ -164,16 +164,16 @@ class ConnectionSQL{
   ''';
 
   static String selectPaymentMethodById() => '''
-  SELECT * FROM TB_PAYMENT_METHOD WHERE ID = ?;
+  SELECT * FROM TB_FORMA_PAGAMENTO WHERE ID = ?;
   ''';
 
   // ====================== POPULATION TABLES ======================
 
   static String populatePaymentMethod() => '''
-  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Dinheiro');
-  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Cartão de Crédito');
-  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Cartão de Débito');
-  INSERT INTO TB_FORMA_PAGAMENTO (NAME) VALUES ('Cheque');
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Dinheiro');
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Cartão de Crédito');
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Cartão de Débito');
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Cheque');
   ''';
 
   static String populateProduct() => '''
@@ -203,7 +203,7 @@ class ConnectionSQL{
   DELETE FROM TB_CLIENTE;
   DELETE FROM TB_PRODUTO;
   DELETE FROM TB_FORNECEDOR;
-  DELETE FROM TB_PAYMENT_METHOD;
+  DELETE FROM TB_FORMA_PAGAMENTO;
   ''';
 
 }

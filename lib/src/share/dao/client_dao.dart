@@ -3,7 +3,7 @@ import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'sql.dart';
 
-class ClientDao {
+class ClientModelDao {
   final ConnectionSQLiteService _connection = ConnectionSQLiteService.instance;
 
   Future<Database> _getDatabase() async => await _connection.db;

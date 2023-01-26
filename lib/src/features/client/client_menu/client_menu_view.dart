@@ -13,7 +13,7 @@ class ClientMenuView extends StatefulWidget {
 
 class _ClientMenuViewState extends State<ClientMenuView> {
   List<ClientModel> clients = [];
-  final ClientDao _clientDao = ClientDao();
+  final ClientModelDao _clientDao = ClientModelDao();
 
   void selectAllClients() async {
     try {

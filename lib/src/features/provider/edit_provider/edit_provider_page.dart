@@ -128,7 +128,7 @@ class _EditProviderPageState extends State<EditProviderPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o CPF do fornecedor';
+                    return 'Por favor, informe o CNPJ do fornecedor';
                   }
                   return null;
                 },
