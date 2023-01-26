@@ -22,7 +22,7 @@ class _EditClientPageState extends State<EditClientPage> {
   final TextEditingController _cepController = TextEditingController();
 
   ClientModel client = ClientModel.empty();
-  final ClientModelDao _clientDao = ClientModelDao();
+  final ClientDao _clientDao = ClientDao();
 
   void save() {
     client.name = _nameController.text;

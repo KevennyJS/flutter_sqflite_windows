@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
-import '../../../share/dao/product_dao.dart';
-import '../../../share/models/product_model.dart';
-import '../edit_product/edit_product_page.dart';
+import '../../../share/dao/sale_dao.dart';
+import '../../../share/models/sale_model.dart';
+import '../edit_sale/edit_sale_view.dart';
 
-class ProductMenuView extends StatefulWidget {
-  const ProductMenuView({Key? key}) : super(key: key);
+class SaleMenuView extends StatefulWidget {
+  const SaleMenuView({Key? key}) : super(key: key);
 
   @override
-  State<ProductMenuView> createState() => _ProductMenuViewState();
+  State<SaleMenuView> createState() => _SaleMenuViewState();
 }
 
-class _ProductMenuViewState extends State<ProductMenuView> {
-  List<ProductModel> products = [];
-  final ProductDao _productDao = ProductDao();
+class _SaleMenuViewState extends State<SaleMenuView> {
+  List<SaleModel> sales = [];
 
-  void selectAllProducts() async {
+
+  final SaleDao _saleDao = SaleDao();
+
+  void selectAllSales() async {
     try {
-      products = await _productDao.selectAll();
+      sales = await _saleDao.selectAll();
       setState(() {});
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Erro ao buscar produtos")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Erro ao buscar Vendas")));
     }
   }
 
+
   @override
   void initState() {
-    selectAllProducts();
+    selectAllSales();
     super.initState();
   }
 
@@ -39,7 +42,7 @@ class _ProductMenuViewState extends State<ProductMenuView> {
           actions: [
             TextButton(
               onPressed: () async {
-                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EditProductPage())).then((value) => selectAllProducts());
+                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EditSaleView())).then((value) => selectAllSales());
               },
               child: Container(
                 width: 120,
@@ -57,18 +60,18 @@ class _ProductMenuViewState extends State<ProductMenuView> {
           ],
         ),
         body: ListView.builder(
-          itemCount: products.length,
+          itemCount: sales.length,
           itemBuilder: (context, index) {
-            ProductModel client = products[index];
+            SaleModel sale = sales[index];
             return ListTile(
-              title: Text(client.name),
-              subtitle: Text(client.description),
+              title: Text("Venda #${sale.id}"),
+              subtitle: Text(sale.total.toString()),
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {},
               ),
               onTap: () async {
-                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProductPage(productParameter: products[index]))).then((value) => selectAllProducts());
+                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditSaleView(saleParameter: sales[index]))).then((value) => selectAllSales());
                 setState(() {});
               },
             );

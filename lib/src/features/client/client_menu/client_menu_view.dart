@@ -13,7 +13,7 @@ class ClientMenuView extends StatefulWidget {
 
 class _ClientMenuViewState extends State<ClientMenuView> {
   List<ClientModel> clients = [];
-  final ClientModelDao _clientDao = ClientModelDao();
+  final ClientDao _clientDao = ClientDao();
 
   void selectAllClients() async {
     try {
@@ -43,8 +43,8 @@ class _ClientMenuViewState extends State<ClientMenuView> {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EditClientPage())).then((value) => selectAllClients());
               },
               child: Container(
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 120,
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),

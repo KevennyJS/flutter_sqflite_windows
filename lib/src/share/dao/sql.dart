@@ -1,4 +1,4 @@
-class ConnectionSQL{
+class ConnectionSQL {
   static const createDatabase = '''
   CREATE TABLE `TB_CLIENTE`(
     `ID` INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -37,7 +37,8 @@ class ConnectionSQL{
     `ID` INTEGER PRIMARY KEY AUTOINCREMENT,
     `ID_CLIENTE` INTEGER NOT NULL,
     `ID_FORMA_PAGAMENTO` INTEGER NOT NULL,
-    `DATA_VENDA` TEXT NOT NULL,
+    `VALOR_TOTAL` REAL NOT NULL,
+    `DATA` TEXT NOT NULL,
     FOREIGN KEY(`ID_CLIENTE`) REFERENCES TB_CLIENTE(`ID`),
     FOREIGN KEY(`ID_FORMA_PAGAMENTO`) REFERENCES TB_FORMA_PAGAMENTO(`ID`)
   );
@@ -55,14 +56,15 @@ class ConnectionSQL{
     `ID` INTEGER PRIMARY KEY AUTOINCREMENT,
     `ID_FORNECEDOR` INTEGER NOT NULL,
     `ID_FORMA_PAGAMENTO` INTEGER NOT NULL,
-    `DATA_COMPRA` TEXT NOT NULL,
+    `VALOR_TOTAL` REAL NOT NULL,
+    `DATA` TEXT NOT NULL,
     FOREIGN KEY(`ID_FORNECEDOR`) REFERENCES TB_FORNECEDOR(`ID`)
   );
   
   CREATE TABLE TB_COMPRA_PRODUTO(
     `ID_COMPRA` INTEGER NOT NULL,
     `ID_PRODUTO` INTEGER NOT NULL,
-    `VALOR REAL` NOT NULL,
+    `VALOR` REAL NOT NULL,
     `QUANTIDADE` REAL NOT NULL,
     FOREIGN KEY(`ID_COMPRA`) REFERENCES TB_COMPRA(`ID`),
     FOREIGN KEY(`ID_PRODUTO`) REFERENCES TB_PRODUTO(`ID`)
@@ -87,6 +89,22 @@ class ConnectionSQL{
   INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES (?);
   ''';
 
+  static String addSale() => '''
+  INSERT INTO TB_VENDA (ID_CLIENTE, ID_FORMA_PAGAMENTO, VALOR_TOTAL, DATA) VALUES (?, ?, ?, ?);
+  ''';
+
+  static String addSaleProduct() => '''
+  INSERT INTO TB_VENDA_PRODUTO (ID_VENDA, ID_PRODUTO, VALOR, QUANTIDADE) VALUES (?, ?, ?, ?);
+  ''';
+
+  static String addPurchase() => '''
+  INSERT INTO TB_COMPRA (ID_FORNECEDOR, ID_FORMA_PAGAMENTO,VALOR_TOTAL ,DATA) VALUES (?, ?,? , ?);
+  ''';
+
+  static String addPurchaseProduct() => '''
+  INSERT INTO TB_COMPRA_PRODUTO (ID_COMPRA, ID_PRODUTO, VALOR, QUANTIDADE) VALUES (?, ?, ?, ?);
+  ''';
+
   // ====================== UPDATE ======================
 
   static String updateClient() => '''
@@ -103,6 +121,22 @@ class ConnectionSQL{
 
   static String updatePaymentMethod() => '''
   UPDATE TB_FORMA_PAGAMENTO SET NOME = ? WHERE ID = ?;
+  ''';
+
+  static String updateSale() => '''
+  UPDATE TB_VENDA SET ID_CLIENTE = ?, ID_FORMA_PAGAMENTO = ?, VALOR_TOTAL = ? , DATA = ? WHERE ID = ?;
+  ''';
+
+  static String updateSaleProduct() => '''
+  UPDATE TB_VENDA_PRODUTO SET ID_VENDA = ?, ID_PRODUTO = ?, VALOR = ?, QUANTIDADE = ? WHERE ID = ?;
+  ''';
+
+  static String updatePurchase() => '''
+  UPDATE TB_COMPRA SET ID_FORNECEDOR = ?, ID_FORMA_PAGAMENTO = ?, DATA = ? WHERE ID = ?;
+  ''';
+
+  static String updatePurchaseProduct() => '''
+  UPDATE TB_COMPRA_PRODUTO SET ID_COMPRA = ?, ID_PRODUTO = ?, VALOR = ?, QUANTIDADE = ? WHERE ID = ?;
   ''';
 
   // ====================== SELECT ALL ======================
@@ -127,8 +161,16 @@ class ConnectionSQL{
   SELECT * FROM TB_VENDA;
   ''';
 
-  static String selectAllBuy() => '''
+  static String selectAllSaleProduct() => '''
+  SELECT * FROM TB_VENDA_PRODUTO;
+  ''';
+
+  static String selectAllPurchase() => '''
   SELECT * FROM TB_COMPRA;
+  ''';
+
+  static String selectAllPurchaseProduct() => '''
+  SELECT * FROM TB_COMPRA_PRODUTO;
   ''';
 
   // ====================== DELETE ======================
@@ -149,6 +191,22 @@ class ConnectionSQL{
   DELETE FROM TB_FORMA_PAGAMENTO WHERE ID = ?;
   ''';
 
+  static String deleteSale() => '''
+  DELETE FROM TB_VENDA WHERE ID = ?;
+  ''';
+
+  static String deleteSaleProduct() => '''
+  DELETE FROM TB_VENDA_PRODUTO WHERE ID = ?;
+  ''';
+
+  static String deletePurchase() => '''
+  DELETE FROM TB_COMPRA WHERE ID = ?;
+  ''';
+
+  static String deletePurchaseProduct() => '''
+  DELETE FROM TB_COMPRA_PRODUTO WHERE ID = ?;
+  ''';
+
   // ====================== SELECT BY ID ======================
 
   static String selectClientById() => '''
@@ -165,6 +223,22 @@ class ConnectionSQL{
 
   static String selectPaymentMethodById() => '''
   SELECT * FROM TB_FORMA_PAGAMENTO WHERE ID = ?;
+  ''';
+
+  static String selectSaleById() => '''
+  SELECT * FROM TB_VENDA WHERE ID = ?;
+  ''';
+
+  static String selectSaleProductById() => '''
+  SELECT * FROM TB_VENDA_PRODUTO WHERE ID_VENDA = ?;
+  ''';
+
+  static String selectPurchaseById() => '''
+  SELECT * FROM TB_COMPRA WHERE ID = ?;
+  ''';
+
+  static String selectPurchaseProductById() => '''
+  SELECT * FROM TB_COMPRA_PRODUTO WHERE ID = ?;
   ''';
 
   // ====================== POPULATION TABLES ======================
@@ -197,6 +271,34 @@ class ConnectionSQL{
   INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 4', '123.456.789-00', '99999-9999', 'Rua 4', 'Bairro 4', '99999-999');
   ''';
 
+  static String populateSale() => '''
+  INSERT INTO TB_VENDA (ID_CLIENTE, ID_FORMA_PAGAMENTO, DATA, VALOR_TOTAL) VALUES (1, 1, '2020-01-01', 20.00);
+  INSERT INTO TB_VENDA (ID_CLIENTE, ID_FORMA_PAGAMENTO, DATA, VALOR_TOTAL) VALUES (2, 2, '2020-01-01', 20.00);
+  INSERT INTO TB_VENDA (ID_CLIENTE, ID_FORMA_PAGAMENTO, DATA, VALOR_TOTAL) VALUES (3, 3, '2020-01-01', 20.00);
+  INSERT INTO TB_VENDA (ID_CLIENTE, ID_FORMA_PAGAMENTO, DATA, VALOR_TOTAL) VALUES (4, 4, '2020-01-01', 20.00);
+  ''';
+
+  static String populateSaleProduct() => '''
+  INSERT INTO TB_VENDA_PRODUTO (ID_VENDA, ID_PRODUTO, QUANTIDADE,  VALOR) VALUES (1, 1, 2,10.00);
+  INSERT INTO TB_VENDA_PRODUTO (ID_VENDA, ID_PRODUTO, QUANTIDADE,  VALOR) VALUES (2, 2, 2,10.00);
+  INSERT INTO TB_VENDA_PRODUTO (ID_VENDA, ID_PRODUTO, QUANTIDADE,  VALOR) VALUES (3, 3, 2,10.00);
+  INSERT INTO TB_VENDA_PRODUTO (ID_VENDA, ID_PRODUTO, QUANTIDADE,  VALOR) VALUES (4, 4, 2,10.00);
+  ''';
+
+  // static String populatePurchase() => '''
+  // INSERT INTO TB_COMPRA (ID_FORNECEDOR, DATA, VALOR_TOTAL) VALUES (1, '2020-01-01', 20.00);
+  // INSERT INTO TB_COMPRA (ID_FORNECEDOR, DATA, VALOR_TOTAL) VALUES (2, '2020-01-01', 20.00);
+  // INSERT INTO TB_COMPRA (ID_FORNECEDOR, DATA, VALOR_TOTAL) VALUES (3, '2020-01-01', 20.00);
+  // INSERT INTO TB_COMPRA (ID_FORNECEDOR, DATA, VALOR_TOTAL) VALUES (4, '2020-01-01', 20.00);
+  // ''';
+  //
+  // static String populatePurchaseProduct() => '''
+  // INSERT INTO TB_COMPRA_PRODUTO (ID_COMPRA, ID_PRODUTO, QUANTIDADE,  VALOR_TOTAL) VALUES (1, 1, 2, 10.00);
+  // INSERT INTO TB_COMPRA_PRODUTO (ID_COMPRA, ID_PRODUTO, QUANTIDADE,  VALOR_TOTAL) VALUES (2, 2, 2, 10.00);
+  // INSERT INTO TB_COMPRA_PRODUTO (ID_COMPRA, ID_PRODUTO, QUANTIDADE,  VALOR_TOTAL) VALUES (3, 3, 2, 10.00);
+  // INSERT INTO TB_COMPRA_PRODUTO (ID_COMPRA, ID_PRODUTO, QUANTIDADE,  VALOR_TOTAL) VALUES (4, 4, 2, 10.00);
+  // ''';
+
   // ====================== CLEAR ALL TABLES ======================
 
   static String clearAllTables() => '''
@@ -204,6 +306,9 @@ class ConnectionSQL{
   DELETE FROM TB_PRODUTO;
   DELETE FROM TB_FORNECEDOR;
   DELETE FROM TB_FORMA_PAGAMENTO;
+  DELETE FROM TB_VENDA;
+  DELETE FROM TB_VENDA_PRODUTO;
+  DELETE FROM TB_COMPRA;
+  DELETE FROM TB_COMPRA_PRODUTO;
   ''';
-
 }

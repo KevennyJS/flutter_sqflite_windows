@@ -3,7 +3,7 @@ import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'sql.dart';
 
-class ClientModelDao {
+class ClientDao {
   final ConnectionSQLiteService _connection = ConnectionSQLiteService.instance;
 
   Future<Database> _getDatabase() async => await _connection.db;
@@ -44,6 +44,16 @@ class ClientModelDao {
       Database db = await _getDatabase();
       int result = await db.rawDelete(ConnectionSQL.deleteClient(), [client.id]);
       return result > 0;
+    } catch (error) {
+      throw Exception();
+    }
+  }
+
+  Future<ClientModel> selectById(int id) async {
+    try {
+      Database db = await _getDatabase();
+      List<Map> result = await db.rawQuery(ConnectionSQL.selectClientById(), [id]);
+      return ClientModel.fromSQLite(result.first);
     } catch (error) {
       throw Exception();
     }

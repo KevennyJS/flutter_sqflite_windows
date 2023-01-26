@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_windows/src/features/payment_method/payment_method_menu/payment_method_menu_view.dart';
 import 'package:flutter_sqflite_windows/src/share/dao/client_dao.dart';
+import '../../share/mock.dart';
 import '../../share/widgets/card_menu.dart';
 import '../client/client_menu/client_menu_view.dart';
 import '../product/product_menu/product_menu_view.dart';
 import '../provider/provider_menu/provider_menu_view.dart';
+import '../sale/sale_menu/sale_menu_view.dart';
 
 class BaseView extends StatelessWidget {
   BaseView({Key? key}) : super(key: key);
-  final ClientModelDao clientDao = ClientModelDao();
+  final ClientDao clientDao = ClientDao();
 
   final keyClientMenu = GlobalKey<NavigatorState>();
 
@@ -57,10 +59,10 @@ class BaseView extends StatelessWidget {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(onPressed: () {
-      //   Mock mock = Mock();
-      //   mock.insertMocks();
-      // },),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Mock mock = Mock();
+        mock.insertMocks();
+      },),
     );
   }
 }
@@ -78,7 +80,7 @@ class HomeView extends StatelessWidget {
             CardMenu(title: 'Menu Fornecedor', screenRoute: ProviderMenuView()),
             CardMenu(title: 'Menu Metodo de Pagamento', screenRoute: PaymentMethodMenuView()),
             CardMenu(title: 'Menu Produto', screenRoute: ProductMenuView()),
-            // CardMenu(title: 'Vendas', screenRoute: SaleMenuView()),
+            CardMenu(title: 'Vendas', screenRoute: SaleMenuView()),
             // CardMenu(title: 'Compras', screenRoute: BuyMenuView()),
           ],
         )

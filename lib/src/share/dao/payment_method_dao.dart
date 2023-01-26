@@ -49,4 +49,14 @@ class PaymentMethodDao{
       throw Exception();
     }
   }
+
+  Future<PaymentMethodModel> selectById(int id) async {
+    try {
+      Database db = await _getDatabase();
+      List<Map> result = await db.rawQuery(ConnectionSQL.selectPaymentMethodById(), [id]);
+      return PaymentMethodModel.fromSQLite(result.first);
+    } catch (error) {
+      throw Exception();
+    }
+  }
 }

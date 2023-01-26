@@ -42,8 +42,8 @@ class _ProviderMenuViewState extends State<ProviderMenuView> {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EditProviderPage())).then((value) => selectAllProviders());
               },
               child: Container(
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 120,
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
