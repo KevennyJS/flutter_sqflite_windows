@@ -13,7 +13,6 @@ class SaleMenuView extends StatefulWidget {
 class _SaleMenuViewState extends State<SaleMenuView> {
   List<SaleModel> sales = [];
 
-
   final SaleDao _saleDao = SaleDao();
 
   void selectAllSales() async {
@@ -25,7 +24,6 @@ class _SaleMenuViewState extends State<SaleMenuView> {
     }
   }
 
-
   @override
   void initState() {
     selectAllSales();
@@ -36,7 +34,7 @@ class _SaleMenuViewState extends State<SaleMenuView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('GERENCIAR FORNECEDORES'),
+          title: const Text('GERENCIAR VENDAS'),
           centerTitle: true,
           elevation: 0,
           actions: [

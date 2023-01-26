@@ -16,7 +16,7 @@ class ProductModel {
   factory ProductModel.fromSQLite(Map map) => ProductModel(
         id: map['ID'],
         name: map['NOME'],
-        price: map['PRECO'].toDouble() ?? 0.0,
+        price: map['VALOR'].toDouble() ?? 0.0,
         stock: map['ESTOQUE'].toDouble() ?? 0.0,
         description: map['DESCRICAO'],
       );

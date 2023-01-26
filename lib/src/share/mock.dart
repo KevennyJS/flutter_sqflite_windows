@@ -30,10 +30,10 @@ class Mock {
     if (result > 0) debugPrint("Venda populada");
     result = await db.rawInsert(ConnectionSQL.populateSaleProduct());
     if (result > 0) debugPrint("Item de venda populado");
-    // result = await db.rawInsert(ConnectionSQL.populatePurchase());
-    // if (result > 0) debugPrint("Compra populada");
-    // result = await db.rawInsert(ConnectionSQL.populatePurchaseProduct());
-    // if (result > 0) debugPrint("Item de compra populado");
+    result = await db.rawInsert(ConnectionSQL.populatePurchase());
+    if (result > 0) debugPrint("Compra populada");
+    result = await db.rawInsert(ConnectionSQL.populatePurchaseProduct());
+    if (result > 0) debugPrint("Item de compra populado");
 
   }
 

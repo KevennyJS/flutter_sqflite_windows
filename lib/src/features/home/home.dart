@@ -6,6 +6,7 @@ import '../../share/widgets/card_menu.dart';
 import '../client/client_menu/client_menu_view.dart';
 import '../product/product_menu/product_menu_view.dart';
 import '../provider/provider_menu/provider_menu_view.dart';
+import '../purchase/purchase_menu/sale_menu_view.dart';
 import '../sale/sale_menu/sale_menu_view.dart';
 
 class BaseView extends StatelessWidget {
@@ -81,7 +82,7 @@ class HomeView extends StatelessWidget {
             CardMenu(title: 'Menu Metodo de Pagamento', screenRoute: PaymentMethodMenuView()),
             CardMenu(title: 'Menu Produto', screenRoute: ProductMenuView()),
             CardMenu(title: 'Vendas', screenRoute: SaleMenuView()),
-            // CardMenu(title: 'Compras', screenRoute: BuyMenuView()),
+            CardMenu(title: 'Compras', screenRoute: PurchaseMenuView()),
           ],
         )
         );

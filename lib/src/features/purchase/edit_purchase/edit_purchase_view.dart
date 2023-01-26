@@ -3,41 +3,46 @@ import 'package:flutter_sqflite_windows/src/share/dao/payment_method_dao.dart';
 import 'package:flutter_sqflite_windows/src/share/models/sale_product_model.dart';
 import '../../../share/dao/client_dao.dart';
 import '../../../share/dao/product_dao.dart';
+import '../../../share/dao/provider_dao.dart';
+import '../../../share/dao/purchases_dao.dart';
 import '../../../share/dao/sale_dao.dart';
+import '../../../share/models/buy_model.dart';
 import '../../../share/models/client_model.dart';
 import '../../../share/models/payment_method_model.dart';
 import '../../../share/models/product_model.dart';
+import '../../../share/models/provider_model.dart';
+import '../../../share/models/purchase_product_model.dart';
 import '../../../share/models/sale_model.dart';
 
-class EditSaleView extends StatefulWidget {
-  const EditSaleView({super.key, this.saleParameter});
+class EditPurchaseView extends StatefulWidget {
+  const EditPurchaseView({super.key, this.purchaseParameter});
 
-  final SaleModel? saleParameter;
+  final PurchaseModel? purchaseParameter;
 
   @override
-  State<EditSaleView> createState() => _EditSaleViewState();
+  State<EditPurchaseView> createState() => _EditPurchaseViewState();
 }
 
-class _EditSaleViewState extends State<EditSaleView> {
+class _EditPurchaseViewState extends State<EditPurchaseView> {
   final PaymentMethodDao _paymentMethodDao = PaymentMethodDao();
   final ProductDao _productDao = ProductDao();
-  final ClientDao _clientDao = ClientDao();
-  final SaleDao _saleDao = SaleDao();
+  final ProviderDao _providerDao = ProviderDao();
+  final PurchaseDao _purchaseDao = PurchaseDao();
 
   PaymentMethodModel? paymentMethod;
   ProductModel? product;
-  ClientModel? client;
-  SaleModel sale = SaleModel.empty();
+  ProviderModel? provider;
+  PurchaseModel purchase = PurchaseModel.empty();
 
   List<PaymentMethodModel> paymentMethods = [];
   List<ProductModel> products = [];
-  List<ClientModel> clients = [];
+  List<ProviderModel> providers = [];
 
   double total = 0;
 
   void selectAllClients() async {
     try {
-      clients = await _clientDao.selectAll();
+      providers = await _providerDao.selectAll();
       setState(() {});
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Erro ao buscar clientes")));
@@ -54,23 +59,26 @@ class _EditSaleViewState extends State<EditSaleView> {
   }
 
   void save() {
-    sale.clientId = client!.id!;
-    sale.paymentMethod = paymentMethod!.id!;
-    sale.total = product!.price.toDouble();
-    sale.date = DateTime.now();
+    purchase.idProvider = provider!.id!;
+    purchase.idPaymentMethod = paymentMethod!.id!;
+    purchase.price = product!.price.toDouble();
+    purchase.date = DateTime.now();
 
-    if (sale.id == null) {
-      insertSale();
+    if (purchase.id == null) {
+      insertPurchase();
       return;
     }
 
-    updateSale();
+    updatePurchase();
   }
 
-  void insertSale() async {
+  void insertPurchase() async {
     try {
-      SaleModel insertedSale = await _saleDao.insert(sale);
-      sale.id = insertedSale.id;
+      PurchaseModel insertedSale = await _purchaseDao.insert(purchase);
+      purchase.id = insertedSale.id;
+      print("insertedSale.id: ${insertedSale.id}");
+      print("product.id: ${product!.id!}");
+      await _purchaseDao.insertPurchaseProduct(PurchaseProductModel(id_purchase: purchase.id!, id_product: product!.id!, price: product!.price.toDouble(), quantity: 1));
       mostrarMensagem('Venda inserido com sucesso');
       setState(() {});
     } catch (error) {
@@ -78,9 +86,9 @@ class _EditSaleViewState extends State<EditSaleView> {
     }
   }
 
-  void updateSale() async {
+  void updatePurchase() async {
     try {
-      if (await _saleDao.update(sale)) {
+      if (await _purchaseDao.update(purchase)) {
         mostrarMensagem("Venda atualizado com sucesso");
         return;
       }
@@ -92,11 +100,11 @@ class _EditSaleViewState extends State<EditSaleView> {
 
   void deleteProvider() async {
     try {
-      if (sale.id == null) {
+      if (purchase.id == null) {
         mostrarMensagem('Impossivel deletar venda não cadastrado');
         return;
       }
-      if (await _saleDao.delete(sale)) {
+      if (await _purchaseDao.delete(purchase)) {
         mostrarMensagem("Venda excluído com sucesso");
         Navigator.pop(context);
         return;
@@ -113,9 +121,9 @@ class _EditSaleViewState extends State<EditSaleView> {
 
   @override
   Future<void> didChangeDependencies() async {
-    SaleModel? saleParameter = widget.saleParameter;
+    PurchaseModel? purchaseParameter = widget.purchaseParameter;
 
-    if (saleParameter != null) {
+    if (purchaseParameter != null) {
       // if (products.isNotEmpty) {
       //   List<SaleProductModel> saleProducts = await _productDao.getProductFromSale(saleParameter.id!);
       //   print("saleProducts: $saleProducts");
@@ -136,7 +144,7 @@ class _EditSaleViewState extends State<EditSaleView> {
       //   // _addressController.text = providerParameter.address;
       //   // _districtController.text = providerParameter.district;
       //   // _cepController.text = providerParameter.cep;
-      sale = saleParameter;
+      purchase = purchaseParameter;
     }
     super.didChangeDependencies();
   }
@@ -145,7 +153,7 @@ class _EditSaleViewState extends State<EditSaleView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.saleParameter != null ? "Editar" : "Criar"} Venda'),
+        title: Text('${widget.purchaseParameter != null ? "Editar" : "Criar"} Compra'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -155,29 +163,29 @@ class _EditSaleViewState extends State<EditSaleView> {
               width: 200,
               height: 50,
               child: FutureBuilder(
-                future: clients.isEmpty ? _clientDao.selectAll() : null,
+                future: providers.isEmpty ? _providerDao.selectAll() : null,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    clients = snapshot.data as List<ClientModel>;
-                    if (widget.saleParameter != null) {
-                      client = clients.firstWhere((element) => element.id == sale.clientId);
+                    providers = snapshot.data as List<ProviderModel>;
+                    if (widget.purchaseParameter != null) {
+                      provider = providers.firstWhere((element) => element.id == purchase.idProvider);
                     }
+                    return DropdownButton<ProviderModel>(
+                      value: provider,
+                      items: providers.map((ProviderModel client) {
+                        return DropdownMenuItem<ProviderModel>(
+                          value: client,
+                          child: Text(client.name),
+                        );
+                      }).toList(),
+                      onChanged: (ProviderModel? client) {
+                        setState(() {
+                          this.provider = client!;
+                        });
+                      },
+                      isExpanded: true,
+                    );
                   }
-                  return DropdownButton<ClientModel>(
-                    value: client,
-                    items: clients.map((ClientModel client) {
-                      return DropdownMenuItem<ClientModel>(
-                        value: client,
-                        child: Text(client.name),
-                      );
-                    }).toList(),
-                    onChanged: (ClientModel? client) {
-                      setState(() {
-                        this.client = client!;
-                      });
-                    },
-                    isExpanded: true,
-                  );
                   return const CircularProgressIndicator();
                 },
               ),
@@ -190,13 +198,18 @@ class _EditSaleViewState extends State<EditSaleView> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     products = snapshot.data as List<ProductModel>;
+                    print("products: ${products.map((e) => e.toSQLiteListUpdate())}");
+                    print(widget.purchaseParameter?.toSQLiteUpdate().toString());
                     return FutureBuilder(
-                      future: widget.saleParameter != null ? _productDao.getProductFromSale(widget.saleParameter!.id!) : null,
+                      future: widget.purchaseParameter != null ? _productDao.getProductFromPurchase(widget.purchaseParameter!.id!) : null,
                       builder: (context, snapshot) {
+                        print("snapshot: ${snapshot.data}");
                         if (snapshot.hasData) {
-                          List<SaleProductModel> saleProduct = snapshot.data as List<SaleProductModel>;
-                          if (widget.saleParameter != null) {
-                            product = products.firstWhere((element) => element.id == saleProduct.first.id_produto);
+                          List<PurchaseProductModel> saleProduct = snapshot.data as List<PurchaseProductModel>;
+                          if (widget.purchaseParameter != null) {
+                            print(product);
+                            print(saleProduct.first.id_product);
+                            product = products.firstWhere((element) => element.id == saleProduct.first.id_product);
                             total = product!.price;
                           }
                         }
@@ -229,26 +242,25 @@ class _EditSaleViewState extends State<EditSaleView> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     paymentMethods = snapshot.data as List<PaymentMethodModel>;
-                    if (widget.saleParameter != null) {
-                      paymentMethod = paymentMethods.firstWhere((element) => element.id == sale.paymentMethod);
+                    if (widget.purchaseParameter != null) {
+                      paymentMethod = paymentMethods.firstWhere((element) => element.id == purchase.idPaymentMethod);
                     }
+                    return DropdownButton<PaymentMethodModel>(
+                      value: paymentMethod,
+                      items: paymentMethods.map((PaymentMethodModel paymentMethod) {
+                        return DropdownMenuItem<PaymentMethodModel>(
+                          value: paymentMethod,
+                          child: Text(paymentMethod.name),
+                        );
+                      }).toList(),
+                      onChanged: (PaymentMethodModel? paymentMethod) {
+                        setState(() {
+                          this.paymentMethod = paymentMethod!;
+                        });
+                      },
+                      isExpanded: true,
+                    );
                   }
-
-                  return DropdownButton<PaymentMethodModel>(
-                    value: paymentMethod,
-                    items: paymentMethods.map((PaymentMethodModel paymentMethod) {
-                      return DropdownMenuItem<PaymentMethodModel>(
-                        value: paymentMethod,
-                        child: Text(paymentMethod.name),
-                      );
-                    }).toList(),
-                    onChanged: (PaymentMethodModel? paymentMethod) {
-                      setState(() {
-                        this.paymentMethod = paymentMethod!;
-                      });
-                    },
-                    isExpanded: true,
-                  );
                   return const CircularProgressIndicator();
                 },
               ),
@@ -266,8 +278,8 @@ class _EditSaleViewState extends State<EditSaleView> {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: sale.id != null ? Colors.red : Colors.grey),
-                  onPressed: sale.id != null ? () => deleteProvider() : null,
+                  style: ElevatedButton.styleFrom(backgroundColor: purchase.id != null ? Colors.red : Colors.grey),
+                  onPressed: purchase.id != null ? () => deleteProvider() : null,
                   child: const Text('Excluir'),
                 ),
               ],
