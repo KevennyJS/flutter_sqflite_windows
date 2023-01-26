@@ -28,4 +28,26 @@ class ProviderDao{
       throw Exception();
     }
   }
+
+  Future<bool> delete(ProviderModel provider) async {
+    try {
+      Database db = await _getDatabase();
+      int result = await db.rawDelete(ConnectionSQL.deleteProvider(), provider.toSQLiteDelete());
+      return result > 0;
+    } catch (error) {
+      throw Exception();
+    }
+  }
+
+  Future<List<ProviderModel>> selectAll() async {
+    try {
+      Database db = await _getDatabase();
+      List<Map<String, dynamic>> result = await db.rawQuery(ConnectionSQL.selectAllProvider());
+      return result.map((e) => ProviderModel.fromSQLite(e)).toList();
+    } catch (error) {
+      throw Exception();
+    }
+  }
+
+
 }

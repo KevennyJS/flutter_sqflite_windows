@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 
 class CardMenu extends StatelessWidget {
   final String title;
-  final String? route;
+  final Widget? screenRoute;
 
-  const CardMenu({Key? key, required this.title, this.route}) : super(key: key);
+  const CardMenu({Key? key, required this.title, this.screenRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => screenRoute!,
+          ),
+        );
+      },
       child: Card(
         child: SizedBox(
           width: 100,

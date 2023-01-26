@@ -3,79 +3,82 @@ import 'package:flutter/services.dart';
 import 'package:flutter_sqflite_windows/src/share/dao/client_dao.dart';
 import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 
-class EditClientPage extends StatefulWidget {
-  const EditClientPage({super.key, this.clientParameter});
+import '../../../share/dao/provider_dao.dart';
+import '../../../share/models/provider_model.dart';
 
-  final ClientModel? clientParameter;
+class EditProviderPage extends StatefulWidget {
+  const EditProviderPage({super.key, this.providerParameter});
+
+  final ProviderModel? providerParameter;
 
   @override
-  State<EditClientPage> createState() => _EditClientPageState();
+  State<EditProviderPage> createState() => _EditProviderPageState();
 }
 
-class _EditClientPageState extends State<EditClientPage> {
+class _EditProviderPageState extends State<EditProviderPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _cpfController = TextEditingController();
+  final TextEditingController _cnpjController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _districtController = TextEditingController();
   final TextEditingController _cepController = TextEditingController();
 
-  ClientModel client = ClientModel.empty();
-  final ClientDao _clientDao = ClientDao();
+  ProviderModel client = ProviderModel.empty();
+  final ProviderDao _providerDao = ProviderDao();
 
   void save() {
     client.name = _nameController.text;
-    client.cpf = _cpfController.text;
+    client.cnpj = _cnpjController.text;
     client.phone = _phoneController.text;
     client.address = _addressController.text;
     client.district = _districtController.text;
     client.cep = _cepController.text;
 
     if (client.id == null) {
-      insertClient();
+      insertProvider();
       return;
     }
-    updateClient();
+    updateProvider();
   }
 
-  void insertClient() async {
+  void insertProvider() async {
     try {
-      ClientModel insertedClient = await _clientDao.insert(client);
-      client.id = insertedClient.id;
-      mostrarMensagem('Cliente inserido com sucesso');
+      ProviderModel insertedProvider = await _providerDao.insert(client);
+      client.id = insertedProvider.id;
+      mostrarMensagem('Fornecedor inserido com sucesso');
       setState(() {});
     } catch (error) {
-      mostrarMensagem('Erro ao inserir cliente');
+      mostrarMensagem('Erro ao inserir fornecedor');
     }
   }
 
-  void updateClient() async {
+  void updateProvider() async {
     try {
-      if (await _clientDao.update(client)) {
-        mostrarMensagem("Cliente atualizado com sucesso");
+      if (await _providerDao.update(client)) {
+        mostrarMensagem("Fornecedor atualizado com sucesso");
         return;
       }
       mostrarMensagem('Nenhum dado foi alterado');
     } catch (error) {
-      mostrarMensagem('Erro ao atualizar cliente');
+      mostrarMensagem('Erro ao atualizar fornecedor');
     }
   }
 
-  void deleteClient() async {
+  void deleteProvider() async {
     try {
       if (client.id == null) {
-        mostrarMensagem('Impossivel deletar cliente não cadastrado');
+        mostrarMensagem('Impossivel deletar fornecedor não cadastrado');
         return;
       }
-      if (await _clientDao.delete(client)) {
-        mostrarMensagem("Cliente excluído com sucesso");
+      if (await _providerDao.delete(client)) {
+        mostrarMensagem("Fornecedor excluído com sucesso");
         Navigator.pop(context);
         return;
       }
-      mostrarMensagem('Nenhum cliente foi deletado');
+      mostrarMensagem('Nenhum fornecedor foi deletado');
     } catch (error) {
-      mostrarMensagem('Erro ao excluir cliente');
+      mostrarMensagem('Erro ao excluir fornecedor');
     }
   }
 
@@ -85,15 +88,15 @@ class _EditClientPageState extends State<EditClientPage> {
 
   @override
   void didChangeDependencies() {
-    ClientModel? clientParameter = widget.clientParameter;
-    if (clientParameter != null) {
-      _nameController.text = clientParameter.name;
-      _cpfController.text = clientParameter.cpf;
-      _phoneController.text = clientParameter.phone;
-      _addressController.text = clientParameter.address;
-      _districtController.text = clientParameter.district;
-      _cepController.text = clientParameter.cep;
-      client = clientParameter;
+    ProviderModel? providerParameter = widget.providerParameter;
+    if (providerParameter != null) {
+      _nameController.text = providerParameter.name;
+      _cnpjController.text = providerParameter.cnpj;
+      _phoneController.text = providerParameter.phone;
+      _addressController.text = providerParameter.address;
+      _districtController.text = providerParameter.district;
+      _cepController.text = providerParameter.cep;
+      client = providerParameter;
     }
     super.didChangeDependencies();
   }
@@ -102,7 +105,7 @@ class _EditClientPageState extends State<EditClientPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.clientParameter != null ? "Editar" : "Criar" } Cliente'),
+        title: Text('${widget.providerParameter != null ? "Editar" : "Criar" } Fornecedor'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -116,19 +119,19 @@ class _EditClientPageState extends State<EditClientPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o nome do cliente';
+                    return 'Por favor, informe o nome do fornecedor';
                   }
                   return null;
                 },
               ),
               TextFormField(
-                controller: _cpfController,
+                controller: _cnpjController,
                 decoration: const InputDecoration(
                   labelText: 'CPF',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o CPF do cliente';
+                    return 'Por favor, informe o CPF do fornecedor';
                   }
                   return null;
                 },
@@ -140,7 +143,7 @@ class _EditClientPageState extends State<EditClientPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o telefone do cliente';
+                    return 'Por favor, informe o telefone do fornecedor';
                   }
                   return null;
                 },
@@ -152,7 +155,7 @@ class _EditClientPageState extends State<EditClientPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o endereço do cliente';
+                    return 'Por favor, informe o endereço do fornecedor';
                   }
                   return null;
                 },
@@ -164,7 +167,7 @@ class _EditClientPageState extends State<EditClientPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o bairro do cliente';
+                    return 'Por favor, informe o bairro do fornecedor';
                   }
                   return null;
                 },
@@ -179,7 +182,7 @@ class _EditClientPageState extends State<EditClientPage> {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o CEP do cliente';
+                    return 'Por favor, informe o CEP do fornecedor';
                   }
                   return null;
                 },
@@ -199,7 +202,7 @@ class _EditClientPageState extends State<EditClientPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: client.id != null ? Colors.red : Colors.grey,
                     ),
-                    onPressed: client.id != null ? () => deleteClient() : null,
+                    onPressed: client.id != null ? () => deleteProvider() : null,
                     child: const Text('Excluir'),
                   ),
                 ],

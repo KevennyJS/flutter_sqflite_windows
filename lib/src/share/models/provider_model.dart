@@ -57,4 +57,6 @@ class ProviderModel {
         district: '',
         cep: '',
       );
+
+  List toSQLiteDelete() => [id];
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import '../../share/dao/sql.dart';
-import '../../share/services/connection_sqlite_service.dart';
+import 'dao/sql.dart';
+import 'services/connection_sqlite_service.dart';
 
 class Mock {
   final ConnectionSQLiteService _connection = ConnectionSQLiteService.instance;
