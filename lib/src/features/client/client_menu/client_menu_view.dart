@@ -3,7 +3,6 @@ import 'package:flutter_sqflite_windows/src/features/client/edit_client/edit_cli
 
 import '../../../share/dao/client_dao.dart';
 import '../../../share/models/client_model.dart';
-import '../../../share/widgets/card_menu.dart';
 
 class ClientMenuView extends StatefulWidget {
   const ClientMenuView({Key? key}) : super(key: key);
@@ -46,12 +45,12 @@ class _ClientMenuViewState extends State<ClientMenuView> {
               child: Container(
                 width: 100,
                 height: 100,
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.red,
                 ),
-                child: Center(
+                child: const Center(
                   child: Text("Criar Cliente", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                 ),
               ),

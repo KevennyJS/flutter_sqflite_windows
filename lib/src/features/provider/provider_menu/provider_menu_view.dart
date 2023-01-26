@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sqflite_windows/src/features/client/edit_client/edit_client_page.dart';
-
-import '../../../share/dao/client_dao.dart';
 import '../../../share/dao/provider_dao.dart';
-import '../../../share/models/client_model.dart';
 import '../../../share/models/provider_model.dart';
-import '../../../share/widgets/card_menu.dart';
 import '../edit_provider/edit_provider_page.dart';
 
 class ProviderMenuView extends StatefulWidget {
