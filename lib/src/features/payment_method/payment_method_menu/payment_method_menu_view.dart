@@ -63,10 +63,7 @@ class _PaymentMethodMenuViewState extends State<PaymentMethodMenuView> {
             return ListTile(
               title: Text(paymentMethod.name),
               subtitle: Text(paymentMethod.name),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {},
-              ),
+
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditPaymentMethodView(paymentMethodParameter: paymentMethods[index]))).then((value) => selectAllPaymentMethod());
                 setState(() {});

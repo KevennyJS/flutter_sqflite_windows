@@ -62,6 +62,7 @@ class PurchaseDao{
     }
   }
 
+
   Future<bool> insertPurchaseProduct(PurchaseProductModel product) async {
     try {
       Database db = await _getDatabase();

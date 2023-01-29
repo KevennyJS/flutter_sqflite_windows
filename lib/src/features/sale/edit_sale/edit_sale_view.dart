@@ -190,8 +190,9 @@ class _EditSaleViewState extends State<EditSaleView> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     products = snapshot.data as List<ProductModel>;
+                    print(products.map((e) => e.toJson()).toList());
                     return FutureBuilder(
-                      future: widget.saleParameter != null ? _productDao.getProductFromSale(widget.saleParameter!.id!) : null,
+                      future: widget.saleParameter != null ? _productDao.getProductFromSale(products, widget.saleParameter!.id!) : null,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<SaleProductModel> saleProduct = snapshot.data as List<SaleProductModel>;
@@ -256,7 +257,7 @@ class _EditSaleViewState extends State<EditSaleView> {
             SizedBox(
               width: 200,
               height: 50,
-              child: Text("Valor final: ${total ?? 0}"),
+              child: Text("Valor final: $total"),
             ),
             Row(
               children: [

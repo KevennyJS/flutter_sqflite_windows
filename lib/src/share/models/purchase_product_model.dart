@@ -12,7 +12,6 @@ class PurchaseProductModel {
   }
 
   static PurchaseProductModel fromSQLite(Map map) {
-    print("INTERNO: ${map['ID_PRODUTO']} - ${map['ID_COMPRA']} - ${map['QUANTIDADE']} - ${map['VALOR']}");
     return PurchaseProductModel(
       id_product: map['ID_PRODUTO'] ?? 1,
       id_purchase: map['ID_COMPRA'] ?? 1,

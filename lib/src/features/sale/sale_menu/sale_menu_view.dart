@@ -51,7 +51,7 @@ class _SaleMenuViewState extends State<SaleMenuView> {
                   color: Colors.red,
                 ),
                 child: const Center(
-                  child: Text("Criar fornecedor", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                  child: Text("Criar Venda", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -64,10 +64,7 @@ class _SaleMenuViewState extends State<SaleMenuView> {
             return ListTile(
               title: Text("Venda #${sale.id}"),
               subtitle: Text(sale.total.toString()),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {},
-              ),
+
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditSaleView(saleParameter: sales[index]))).then((value) => selectAllSales());
                 setState(() {});

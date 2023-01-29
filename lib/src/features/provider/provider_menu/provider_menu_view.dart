@@ -63,10 +63,7 @@ class _ProviderMenuViewState extends State<ProviderMenuView> {
             return ListTile(
               title: Text(client.name),
               subtitle: Text(client.cnpj),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {},
-              ),
+
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProviderPage(providerParameter: clients[index]))).then((value) => selectAllProviders());
                 setState(() {});

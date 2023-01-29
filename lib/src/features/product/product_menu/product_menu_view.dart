@@ -50,7 +50,7 @@ class _ProductMenuViewState extends State<ProductMenuView> {
                   color: Colors.red,
                 ),
                 child: const Center(
-                  child: Text("Criar fornecedor", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                  child: Text("Criar Produto", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -63,10 +63,7 @@ class _ProductMenuViewState extends State<ProductMenuView> {
             return ListTile(
               title: Text(client.name),
               subtitle: Text(client.description),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {},
-              ),
+
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProductPage(productParameter: products[index]))).then((value) => selectAllProducts());
                 setState(() {});

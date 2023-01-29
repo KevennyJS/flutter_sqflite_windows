@@ -1,3 +1,5 @@
+import '../models/product_model.dart';
+
 class ConnectionSQL {
   static const createDatabase = '''
   CREATE TABLE `TB_CLIENTE`(
@@ -207,7 +209,7 @@ class ConnectionSQL {
   DELETE FROM TB_COMPRA_PRODUTO WHERE ID = ?;
   ''';
 
-  // ====================== SELECT BY ID ======================
+  // ====================== SELECT BY ======================
 
   static String selectClientById() => '''
   SELECT * FROM TB_CLIENTE WHERE ID = ?;
@@ -241,6 +243,14 @@ class ConnectionSQL {
   SELECT * FROM TB_COMPRA_PRODUTO WHERE ID_COMPRA = ?;
   ''';
 
+  static String selectProviderByName() => '''
+  SELECT * FROM TB_FORNECEDOR WHERE NOME = ?;
+  ''';
+
+  static String selectPaymentMethodByName() => '''
+  SELECT * FROM TB_FORMA_PAGAMENTO WHERE NOME = ?;
+  ''';
+
   // ====================== POPULATION TABLES ======================
 
   static String populatePaymentMethod() => '''
@@ -248,6 +258,8 @@ class ConnectionSQL {
   INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Cartão de Crédito');
   INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Cartão de Débito');
   INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Cheque');
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('PIX');
+  INSERT INTO TB_FORMA_PAGAMENTO (NOME) VALUES ('Sem nome');
   ''';
 
   static String populateProduct() => '''
@@ -257,7 +269,18 @@ class ConnectionSQL {
   INSERT INTO TB_PRODUTO (NOME, VALOR, ESTOQUE, DESCRICAO) VALUES ('Sprite', 5.00, 10, 'Refrigerante');
   ''';
 
+  static String populateProductFromList(List<ProductModel> products) {
+    String sql = '';
+    products.forEach((product) {
+      sql += '''
+      INSERT INTO TB_PRODUTO (NOME, VALOR, ESTOQUE, DESCRICAO) VALUES ('${product.name}', ${product.price}, ${product.stock}, '${product.description}');
+      ''';
+    });
+    return sql;
+  }
+
   static String populateClient() => '''
+  INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('NÃO DEFINIDO', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
   INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('João', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
   INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Maria', '123.456.789-00', '99999-9999', 'Rua 2', 'Bairro 2', '99999-999');
   INSERT INTO TB_CLIENTE (NOME, CPF, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('José', '123.456.789-00', '99999-9999', 'Rua 3', 'Bairro 3', '99999-999');
@@ -265,7 +288,7 @@ class ConnectionSQL {
   ''';
 
   static String populateProvider() => '''
-  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 1', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor1', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
   INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 2', '123.456.789-00', '99999-9999', 'Rua 2', 'Bairro 2', '99999-999');
   INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 3', '123.456.789-00', '99999-9999', 'Rua 3', 'Bairro 3', '99999-999');
   INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 4', '123.456.789-00', '99999-9999', 'Rua 4', 'Bairro 4', '99999-999');

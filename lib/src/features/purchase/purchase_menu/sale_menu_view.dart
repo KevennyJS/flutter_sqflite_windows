@@ -53,7 +53,7 @@ class _PurchaseMenuViewState extends State<PurchaseMenuView> {
                   color: Colors.red,
                 ),
                 child: const Center(
-                  child: Text("Criar fornecedor", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+                  child: Text("Criar Compra", textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),
@@ -66,10 +66,7 @@ class _PurchaseMenuViewState extends State<PurchaseMenuView> {
             return ListTile(
               title: Text("Compra #${purchase.id}"),
               subtitle: Text(purchase.date.toIso8601String()),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {},
-              ),
+
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditPurchaseView(purchaseParameter: purchases[index]))).then((value) => selectAllSales());
                 setState(() {});

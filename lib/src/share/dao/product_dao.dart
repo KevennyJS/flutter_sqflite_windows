@@ -51,22 +51,30 @@ class ProductDao{
     }
   }
 
-  Future<List<SaleProductModel>> getProductFromSale(int idSale) async {
+  Future<List<SaleProductModel>> getProductFromSale(List<ProductModel>products , int idSale) async {
     try {
       Database db = await _getDatabase();
       List<Map> result = await db.rawQuery(ConnectionSQL.selectSaleProductById(), [idSale]);
-      return SaleProductModel.fromSQLiteList(result);
+      print("result: $result");
+      List<SaleProductModel> saleProductModel = SaleProductModel.fromSQLiteList(result);
+      print("saleProductModel: $saleProductModel");
+      SaleProductModel ret = saleProductModel.firstWhere((element) => element.id_venda == 1);
+      print("ret: ${ret}");
+      return saleProductModel;
     } catch (error) {
       throw Exception();
     }
   }
 
-  Future<List<PurchaseProductModel>> getProductFromPurchase(int idPurchase) async {
+  Future<List<ProductModel>> getProductFromPurchase(List<ProductModel> products, int idPurchase) async {
     try {
       Database db = await _getDatabase();
+      print("Entrando com id: $idPurchase");
       List<Map> result = await db.rawQuery(ConnectionSQL.selectPurchaseProductById(), [idPurchase]);
       print("Map: $result");
-      return PurchaseProductModel.fromSQLiteList(result);
+      print("Query: ${result.first["ID_PRODUTO"]}");
+      List<Map> resultProduct = await db.rawQuery(ConnectionSQL.selectProductById(), [result.first["ID_PRODUTO"]]);
+      return ProductModel.fromSQLiteList(resultProduct);
     } catch (error) {
       throw Exception();
     }

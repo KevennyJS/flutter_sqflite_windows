@@ -64,10 +64,7 @@ class _ClientMenuViewState extends State<ClientMenuView> {
             return ListTile(
               title: Text(client.name),
               subtitle: Text(client.cpf),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {},
-              ),
+
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditClientPage(clientParameter: clients[index]))).then((value) => selectAllClients());
                 setState(() {});

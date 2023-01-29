@@ -39,6 +39,16 @@ class ProviderDao{
     }
   }
 
+  Future<ProviderModel> selectByName(String name) async {
+    try {
+      Database db = await _getDatabase();
+      List<Map> result = await db.rawQuery(ConnectionSQL.selectProviderByName(), [name]);
+      return ProviderModel.fromSQLite(result.first);
+    } catch (error) {
+      throw Exception();
+    }
+  }
+
   Future<List<ProviderModel>> selectAll() async {
     try {
       Database db = await _getDatabase();

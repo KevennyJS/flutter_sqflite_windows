@@ -60,10 +60,16 @@ class BaseView extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Mock mock = Mock();
-        mock.insertMocks();
-      },),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Populando tabela, aguarde...'),duration: Duration(seconds: 1),),);
+          Mock mock = Mock();
+          // await mock.insertMocks();
+          await mock.syncStock();
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tabelas populadas com sucesso!')));
+        },
+      ),
     );
   }
 }
@@ -84,7 +90,6 @@ class HomeView extends StatelessWidget {
             CardMenu(title: 'Vendas', screenRoute: SaleMenuView()),
             CardMenu(title: 'Compras', screenRoute: PurchaseMenuView()),
           ],
-        )
-        );
+        ));
   }
 }

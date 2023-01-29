@@ -198,35 +198,29 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     products = snapshot.data as List<ProductModel>;
-                    print("products: ${products.map((e) => e.toSQLiteListUpdate())}");
-                    print(widget.purchaseParameter?.toSQLiteUpdate().toString());
                     return FutureBuilder(
-                      future: widget.purchaseParameter != null ? _productDao.getProductFromPurchase(widget.purchaseParameter!.id!) : null,
+                      future: widget.purchaseParameter != null ? _productDao.getProductFromPurchase(products, widget.purchaseParameter!.id!) : null,
                       builder: (context, snapshot) {
                         print("snapshot: ${snapshot.data}");
                         if (snapshot.hasData) {
-                          List<PurchaseProductModel> saleProduct = snapshot.data as List<PurchaseProductModel>;
-                          if (widget.purchaseParameter != null) {
-                            print(product);
-                            print(saleProduct.first.id_product);
-                            product = products.firstWhere((element) => element.id == saleProduct.first.id_product);
-                            total = product!.price;
-                          }
+                          ProductModel receivedProduct = (snapshot.data as List<ProductModel>).first;
+                          product = products.firstWhere((element) => element.id == receivedProduct.id);
+                          return DropdownButton<ProductModel>(
+                            value: product,
+                            items: products.map((ProductModel productDropItem) {
+                              return DropdownMenuItem<ProductModel>(
+                                value: productDropItem,
+                                child: Text(productDropItem.name),
+                              );
+                            }).toList(),
+                            onChanged: (ProductModel? productChanged) {
+                              total = productChanged!.price;
+                              setState(() => product = productChanged);
+                            },
+                            isExpanded: true,
+                          );
                         }
-                        return DropdownButton<ProductModel>(
-                          value: product,
-                          items: products.map((ProductModel product) {
-                            return DropdownMenuItem<ProductModel>(
-                              value: product,
-                              child: Text(product.name),
-                            );
-                          }).toList(),
-                          onChanged: (ProductModel? product) {
-                            total = product!.price;
-                            setState(() => this.product = product);
-                          },
-                          isExpanded: true,
-                        );
+                        return const CircularProgressIndicator();
                       },
                     );
                   }
@@ -268,7 +262,7 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
             SizedBox(
               width: 200,
               height: 50,
-              child: Text("Valor final: ${total ?? 0}"),
+              child: Text("Valor final: $total"),
             ),
             Row(
               children: [

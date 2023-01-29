@@ -40,6 +40,16 @@ class PaymentMethodDao{
     }
   }
 
+  Future<PaymentMethodModel> selectByName(String name) async {
+    try {
+      Database db = await _getDatabase();
+      List<Map> result = await db.rawQuery(ConnectionSQL.selectPaymentMethodByName(), [name]);
+      return PaymentMethodModel.fromSQLite(result.first);
+    } catch (error) {
+      throw Exception();
+    }
+  }
+
   Future<bool> delete(PaymentMethodModel paymentMethod) async {
     try {
       Database db = await _getDatabase();

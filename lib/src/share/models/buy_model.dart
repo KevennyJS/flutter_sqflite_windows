@@ -1,3 +1,9 @@
+import 'package:flutter_sqflite_windows/src/share/dao/purchases_dao.dart';
+import 'package:flutter_sqflite_windows/src/share/models/provider_model.dart';
+
+import '../dao/provider_dao.dart';
+import '../entity/googlescript_purchase_entity.dart';
+
 class PurchaseModel {
   int? id;
   int idProvider;
