@@ -1,6 +1,5 @@
 import 'package:flutter_sqflite_windows/src/share/dao/sql.dart';
 import 'package:flutter_sqflite_windows/src/share/models/product_model.dart';
-import 'package:flutter_sqflite_windows/src/share/models/purchase_product_model.dart';
 import 'package:flutter_sqflite_windows/src/share/models/sale_product_model.dart';
 import '../services/connection_sqlite_service.dart';
 import 'package:sqflite/sqflite.dart';
@@ -55,11 +54,8 @@ class ProductDao{
     try {
       Database db = await _getDatabase();
       List<Map> result = await db.rawQuery(ConnectionSQL.selectSaleProductById(), [idSale]);
-      print("result: $result");
       List<SaleProductModel> saleProductModel = SaleProductModel.fromSQLiteList(result);
-      print("saleProductModel: $saleProductModel");
       SaleProductModel ret = saleProductModel.firstWhere((element) => element.id_venda == 1);
-      print("ret: ${ret}");
       return saleProductModel;
     } catch (error) {
       throw Exception();
@@ -69,10 +65,7 @@ class ProductDao{
   Future<List<ProductModel>> getProductFromPurchase(List<ProductModel> products, int idPurchase) async {
     try {
       Database db = await _getDatabase();
-      print("Entrando com id: $idPurchase");
       List<Map> result = await db.rawQuery(ConnectionSQL.selectPurchaseProductById(), [idPurchase]);
-      print("Map: $result");
-      print("Query: ${result.first["ID_PRODUTO"]}");
       List<Map> resultProduct = await db.rawQuery(ConnectionSQL.selectProductById(), [result.first["ID_PRODUTO"]]);
       return ProductModel.fromSQLiteList(resultProduct);
     } catch (error) {

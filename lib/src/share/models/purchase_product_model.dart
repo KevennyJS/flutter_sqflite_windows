@@ -7,7 +7,6 @@ class PurchaseProductModel {
   PurchaseProductModel({this.id_product, this.id_purchase, this.quantity, this.price});
 
   static List<PurchaseProductModel> fromSQLiteList(List<Map> list) {
-    print("List: ${list.map((e) => PurchaseProductModel.fromSQLite(e)).toList()}");
     return list.map((e) => PurchaseProductModel.fromSQLite(e)).toList();
   }
 

@@ -271,11 +271,11 @@ class ConnectionSQL {
 
   static String populateProductFromList(List<ProductModel> products) {
     String sql = '';
-    products.forEach((product) {
+    for (var product in products) {
       sql += '''
       INSERT INTO TB_PRODUTO (NOME, VALOR, ESTOQUE, DESCRICAO) VALUES ('${product.name}', ${product.price}, ${product.stock}, '${product.description}');
       ''';
-    });
+    }
     return sql;
   }
 
@@ -288,10 +288,10 @@ class ConnectionSQL {
   ''';
 
   static String populateProvider() => '''
-  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor1', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
-  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 2', '123.456.789-00', '99999-9999', 'Rua 2', 'Bairro 2', '99999-999');
-  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 3', '123.456.789-00', '99999-9999', 'Rua 3', 'Bairro 3', '99999-999');
-  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Fornecedor 4', '123.456.789-00', '99999-9999', 'Rua 4', 'Bairro 4', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('GBarbosa', '123.456.789-00', '99999-9999', 'Rua 1', 'Bairro 1', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Americanas', '123.456.789-00', '99999-9999', 'Rua 2', 'Bairro 2', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Magalu', '123.456.789-00', '99999-9999', 'Rua 3', 'Bairro 3', '99999-999');
+  INSERT INTO TB_FORNECEDOR (NOME, CNPJ, TELEFONE, ENDERECO, BAIRRO, CEP) VALUES ('Casas Bahia', '123.456.789-00', '99999-9999', 'Rua 4', 'Bairro 4', '99999-999');
   ''';
 
   static String populateSale() => '''

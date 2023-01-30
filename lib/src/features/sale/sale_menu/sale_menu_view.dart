@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sqflite_windows/src/share/dao/client_dao.dart';
+import 'package:flutter_sqflite_windows/src/share/models/client_model.dart';
 import '../../../share/dao/sale_dao.dart';
 import '../../../share/models/sale_model.dart';
 import '../edit_sale/edit_sale_view.dart';
@@ -62,9 +64,19 @@ class _SaleMenuViewState extends State<SaleMenuView> {
           itemBuilder: (context, index) {
             SaleModel sale = sales[index];
             return ListTile(
-              title: Text("Venda #${sale.id}"),
-              subtitle: Text(sale.total.toString()),
-
+              leading: const Icon(Icons.shopping_basket, color: Colors.green),
+              title: FutureBuilder(
+                future: ClientDao().selectById(sale.clientId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    ClientModel client = snapshot.data as ClientModel;
+                    return Text(client.name);
+                  } else {
+                    return const Text("Carregando...");
+                  }
+                },
+              ),
+              trailing: Text("R\$ ${sale.total.toDouble().toStringAsFixed(2)} "),
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditSaleView(saleParameter: sales[index]))).then((value) => selectAllSales());
                 setState(() {});

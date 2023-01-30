@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../share/dao/provider_dao.dart';
 import '../../../share/dao/purchases_dao.dart';
 import '../../../share/models/buy_model.dart';
+import '../../../share/models/provider_model.dart';
 import '../edit_purchase/edit_purchase_view.dart';
 
 class PurchaseMenuView extends StatefulWidget {
@@ -64,7 +66,18 @@ class _PurchaseMenuViewState extends State<PurchaseMenuView> {
           itemBuilder: (context, index) {
             PurchaseModel purchase = purchases[index];
             return ListTile(
-              title: Text("Compra #${purchase.id}"),
+              leading: const Icon(Icons.attach_money, color: Colors.red),
+              title: FutureBuilder(
+                future: ProviderDao().selectById(purchase.idProvider),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    ProviderModel provider = snapshot.data as ProviderModel;
+                    return Text(provider.name);
+                  } else {
+                    return const Text("Carregando...");
+                  }
+                },
+              ),
               subtitle: Text(purchase.date.toIso8601String()),
 
               onTap: () async {

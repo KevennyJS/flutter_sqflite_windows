@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_windows/src/share/dao/payment_method_dao.dart';
-import 'package:flutter_sqflite_windows/src/share/models/sale_product_model.dart';
-import '../../../share/dao/client_dao.dart';
 import '../../../share/dao/product_dao.dart';
 import '../../../share/dao/provider_dao.dart';
 import '../../../share/dao/purchases_dao.dart';
-import '../../../share/dao/sale_dao.dart';
 import '../../../share/models/buy_model.dart';
-import '../../../share/models/client_model.dart';
 import '../../../share/models/payment_method_model.dart';
 import '../../../share/models/product_model.dart';
 import '../../../share/models/provider_model.dart';
 import '../../../share/models/purchase_product_model.dart';
-import '../../../share/models/sale_model.dart';
 
 class EditPurchaseView extends StatefulWidget {
   const EditPurchaseView({super.key, this.purchaseParameter});
@@ -76,8 +71,6 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
     try {
       PurchaseModel insertedSale = await _purchaseDao.insert(purchase);
       purchase.id = insertedSale.id;
-      print("insertedSale.id: ${insertedSale.id}");
-      print("product.id: ${product!.id!}");
       await _purchaseDao.insertPurchaseProduct(PurchaseProductModel(id_purchase: purchase.id!, id_product: product!.id!, price: product!.price.toDouble(), quantity: 1));
       mostrarMensagem('Venda inserido com sucesso');
       setState(() {});
@@ -124,26 +117,6 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
     PurchaseModel? purchaseParameter = widget.purchaseParameter;
 
     if (purchaseParameter != null) {
-      // if (products.isNotEmpty) {
-      //   List<SaleProductModel> saleProducts = await _productDao.getProductFromSale(saleParameter.id!);
-      //   print("saleProducts: $saleProducts");
-      //   product = products.firstWhere((element) => element.id == saleProducts.first.id_produto);
-      //   print(product!.name);
-      //   setState(() {});
-      // }
-      // if (clients.isNotEmpty) {
-      //   client = clients.firstWhere((element) => element.id == saleParameter.clientId);
-      // }
-      // if (paymentMethods.isNotEmpty) {
-      //   paymentMethod = paymentMethods.firstWhere((element) => element.id == saleParameter.paymentMethod);
-      // }
-      //   // paymentMethod = await _paymentMethodDao.selectById(saleParameter.paymentMethod);
-      //   // _nameController.text = providerParameter.name;
-      //   // _cnpjController.text = providerParameter.cnpj;
-      //   // _phoneController.text = providerParameter.phone;
-      //   // _addressController.text = providerParameter.address;
-      //   // _districtController.text = providerParameter.district;
-      //   // _cepController.text = providerParameter.cep;
       purchase = purchaseParameter;
     }
     super.didChangeDependencies();
@@ -151,16 +124,22 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.purchaseParameter != null ? "Editar" : "Criar"} Compra'),
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 200,
+            const SizedBox(height: 50),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: size.width*0.7,
               height: 50,
               child: FutureBuilder(
                 future: providers.isEmpty ? _providerDao.selectAll() : null,
@@ -171,16 +150,18 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
                       provider = providers.firstWhere((element) => element.id == purchase.idProvider);
                     }
                     return DropdownButton<ProviderModel>(
+                      underline: Container(),
                       value: provider,
                       items: providers.map((ProviderModel client) {
                         return DropdownMenuItem<ProviderModel>(
                           value: client,
+                          alignment: Alignment.center,
                           child: Text(client.name),
                         );
                       }).toList(),
                       onChanged: (ProviderModel? client) {
                         setState(() {
-                          this.provider = client!;
+                          provider = client!;
                         });
                       },
                       isExpanded: true,
@@ -190,46 +171,57 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
+            const SizedBox(height: 25),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: size.width*0.7,
               height: 50,
               child: FutureBuilder(
                 future: products.isEmpty ? _productDao.selectAll() : null,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    products = snapshot.data as List<ProductModel>;
-                    return FutureBuilder(
-                      future: widget.purchaseParameter != null ? _productDao.getProductFromPurchase(products, widget.purchaseParameter!.id!) : null,
-                      builder: (context, snapshot) {
-                        print("snapshot: ${snapshot.data}");
-                        if (snapshot.hasData) {
-                          ProductModel receivedProduct = (snapshot.data as List<ProductModel>).first;
-                          product = products.firstWhere((element) => element.id == receivedProduct.id);
-                          return DropdownButton<ProductModel>(
-                            value: product,
-                            items: products.map((ProductModel productDropItem) {
-                              return DropdownMenuItem<ProductModel>(
-                                value: productDropItem,
-                                child: Text(productDropItem.name),
-                              );
-                            }).toList(),
-                            onChanged: (ProductModel? productChanged) {
-                              total = productChanged!.price;
-                              setState(() => product = productChanged);
-                            },
-                            isExpanded: true,
-                          );
-                        }
-                        return const CircularProgressIndicator();
-                      },
-                    );
+                  if (!snapshot.hasData && widget.purchaseParameter != null) {
+                    return const CircularProgressIndicator();
                   }
-                  return const CircularProgressIndicator();
+
+                  products = snapshot.data as List<ProductModel>;
+                  return FutureBuilder(
+                    future: widget.purchaseParameter != null ? _productDao.getProductFromPurchase(products, widget.purchaseParameter!.id!) : null,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        ProductModel receivedProduct = (snapshot.data as List<ProductModel>).first;
+                        product = products.firstWhere((element) => element.id == receivedProduct.id);
+                      }
+                      return DropdownButton<ProductModel>(
+                        value: product,
+                        underline: Container(),
+                        items: products.map((ProductModel productDropItem) {
+                          return DropdownMenuItem<ProductModel>(
+                            value: productDropItem,
+                            alignment: Alignment.center,
+                            child: Text(productDropItem.name),
+                          );
+                        }).toList(),
+                        onChanged: (ProductModel? productChanged) {
+                          total = productChanged!.price;
+                          setState(() => product = productChanged);
+                        },
+                        isExpanded: true,
+                      );
+                    },
+                  );
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
+            const SizedBox(height: 25),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: size.width*0.7,
               height: 50,
               child: FutureBuilder(
                 future: paymentMethods.isEmpty ? _paymentMethodDao.selectAll() : null,
@@ -239,32 +231,44 @@ class _EditPurchaseViewState extends State<EditPurchaseView> {
                     if (widget.purchaseParameter != null) {
                       paymentMethod = paymentMethods.firstWhere((element) => element.id == purchase.idPaymentMethod);
                     }
-                    return DropdownButton<PaymentMethodModel>(
-                      value: paymentMethod,
-                      items: paymentMethods.map((PaymentMethodModel paymentMethod) {
-                        return DropdownMenuItem<PaymentMethodModel>(
-                          value: paymentMethod,
-                          child: Text(paymentMethod.name),
-                        );
-                      }).toList(),
-                      onChanged: (PaymentMethodModel? paymentMethod) {
-                        setState(() {
-                          this.paymentMethod = paymentMethod!;
-                        });
-                      },
-                      isExpanded: true,
-                    );
                   }
-                  return const CircularProgressIndicator();
+                  return DropdownButton<PaymentMethodModel>(
+                    underline: Container(),
+                    value: paymentMethod,
+                    items: paymentMethods.map((PaymentMethodModel paymentMethod) {
+                      return DropdownMenuItem<PaymentMethodModel>(
+                        value: paymentMethod,
+                        alignment: Alignment.center,
+                        child: Text(paymentMethod.name),
+                      );
+                    }).toList(),
+                    onChanged: (PaymentMethodModel? paymentMethod) {
+                      setState(() {
+                        this.paymentMethod = paymentMethod!;
+                      });
+                    },
+                    isExpanded: true,
+                  );
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
-              height: 50,
-              child: Text("Valor final: $total"),
+            const SizedBox(height: 25),
+            const SizedBox(
+              height: 10,
             ),
+            const SizedBox(height: 25),
+            Visibility(
+              visible: widget.purchaseParameter == null,
+              child: Container(
+                alignment: Alignment.center,
+                width: size.width*0.7,
+                height: 50,
+                child: Text("Valor final: $total"),
+              ),
+            ),
+            const SizedBox(height: 25),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () => save(),

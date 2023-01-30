@@ -6,7 +6,7 @@ import '../../share/widgets/card_menu.dart';
 import '../client/client_menu/client_menu_view.dart';
 import '../product/product_menu/product_menu_view.dart';
 import '../provider/provider_menu/provider_menu_view.dart';
-import '../purchase/purchase_menu/sale_menu_view.dart';
+import '../purchase/purchase_menu/purchase_menu_view.dart';
 import '../sale/sale_menu/sale_menu_view.dart';
 
 class BaseView extends StatelessWidget {
@@ -61,13 +61,14 @@ class BaseView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.sync),
         onPressed: () async {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Populando tabela, aguarde...'),duration: Duration(seconds: 1),),);
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sincronizando tabela, aguarde...'),duration: Duration(seconds: 1),),);
           Mock mock = Mock();
-          // await mock.insertMocks();
+          await mock.insertMocks();
           await mock.syncStock();
           ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tabelas populadas com sucesso!')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tabelas sincronizadas com sucesso!')));
         },
       ),
     );
@@ -83,12 +84,12 @@ class HomeView extends StatelessWidget {
         appBar: AppBar(title: const Text('Home'), centerTitle: true, elevation: 0),
         body: Wrap(
           children: const [
-            CardMenu(title: 'Gerenciar Cliente', screenRoute: ClientMenuView()),
-            CardMenu(title: 'Menu Fornecedor', screenRoute: ProviderMenuView()),
-            CardMenu(title: 'Menu Metodo de Pagamento', screenRoute: PaymentMethodMenuView()),
-            CardMenu(title: 'Menu Produto', screenRoute: ProductMenuView()),
-            CardMenu(title: 'Vendas', screenRoute: SaleMenuView()),
-            CardMenu(title: 'Compras', screenRoute: PurchaseMenuView()),
+            CardMenu(title: 'Cliente', screenRoute: ClientMenuView(),icon: Icons.groups),
+            CardMenu(title: 'Fornecedor', screenRoute: ProviderMenuView(), icon: Icons.local_shipping),
+            CardMenu(title: 'Metodo de Pagamento', screenRoute: PaymentMethodMenuView(), icon: Icons.payment_sharp),
+            CardMenu(title: 'Produto', screenRoute: ProductMenuView(),icon: Icons.shopping_cart),
+            CardMenu(title: 'Vendas', screenRoute: SaleMenuView(), icon: Icons.shopping_basket),
+            CardMenu(title: 'Compras', screenRoute: PurchaseMenuView(),icon: Icons.attach_money),
           ],
         ));
   }

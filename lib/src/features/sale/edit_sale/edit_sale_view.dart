@@ -116,26 +116,6 @@ class _EditSaleViewState extends State<EditSaleView> {
     SaleModel? saleParameter = widget.saleParameter;
 
     if (saleParameter != null) {
-      // if (products.isNotEmpty) {
-      //   List<SaleProductModel> saleProducts = await _productDao.getProductFromSale(saleParameter.id!);
-      //   print("saleProducts: $saleProducts");
-      //   product = products.firstWhere((element) => element.id == saleProducts.first.id_produto);
-      //   print(product!.name);
-      //   setState(() {});
-      // }
-      // if (clients.isNotEmpty) {
-      //   client = clients.firstWhere((element) => element.id == saleParameter.clientId);
-      // }
-      // if (paymentMethods.isNotEmpty) {
-      //   paymentMethod = paymentMethods.firstWhere((element) => element.id == saleParameter.paymentMethod);
-      // }
-      //   // paymentMethod = await _paymentMethodDao.selectById(saleParameter.paymentMethod);
-      //   // _nameController.text = providerParameter.name;
-      //   // _cnpjController.text = providerParameter.cnpj;
-      //   // _phoneController.text = providerParameter.phone;
-      //   // _addressController.text = providerParameter.address;
-      //   // _districtController.text = providerParameter.district;
-      //   // _cepController.text = providerParameter.cep;
       sale = saleParameter;
     }
     super.didChangeDependencies();
@@ -143,16 +123,22 @@ class _EditSaleViewState extends State<EditSaleView> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.saleParameter != null ? "Editar" : "Criar"} Venda'),
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 200,
+            const SizedBox(height: 50),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: size.width * 0.7,
               height: 50,
               child: FutureBuilder(
                 future: clients.isEmpty ? _clientDao.selectAll() : null,
@@ -165,9 +151,11 @@ class _EditSaleViewState extends State<EditSaleView> {
                   }
                   return DropdownButton<ClientModel>(
                     value: client,
+                    underline: Container(),
                     items: clients.map((ClientModel client) {
                       return DropdownMenuItem<ClientModel>(
                         value: client,
+                        alignment: Alignment.center,
                         child: Text(client.name),
                       );
                     }).toList(),
@@ -178,19 +166,22 @@ class _EditSaleViewState extends State<EditSaleView> {
                     },
                     isExpanded: true,
                   );
-                  return const CircularProgressIndicator();
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
+            const SizedBox(height: 25),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: size.width * 0.7,
               height: 50,
               child: FutureBuilder(
                 future: products.isEmpty ? _productDao.selectAll() : null,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     products = snapshot.data as List<ProductModel>;
-                    print(products.map((e) => e.toJson()).toList());
                     return FutureBuilder(
                       future: widget.saleParameter != null ? _productDao.getProductFromSale(products, widget.saleParameter!.id!) : null,
                       builder: (context, snapshot) {
@@ -203,9 +194,11 @@ class _EditSaleViewState extends State<EditSaleView> {
                         }
                         return DropdownButton<ProductModel>(
                           value: product,
+                          underline: Container(),
                           items: products.map((ProductModel product) {
                             return DropdownMenuItem<ProductModel>(
                               value: product,
+                              alignment: Alignment.center,
                               child: Text(product.name),
                             );
                           }).toList(),
@@ -222,8 +215,13 @@ class _EditSaleViewState extends State<EditSaleView> {
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
+            const SizedBox(height: 25),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: size.width * 0.7,
               height: 50,
               child: FutureBuilder(
                 future: paymentMethods.isEmpty ? _paymentMethodDao.selectAll() : null,
@@ -236,10 +234,12 @@ class _EditSaleViewState extends State<EditSaleView> {
                   }
 
                   return DropdownButton<PaymentMethodModel>(
+                    underline: Container(),
                     value: paymentMethod,
                     items: paymentMethods.map((PaymentMethodModel paymentMethod) {
                       return DropdownMenuItem<PaymentMethodModel>(
                         value: paymentMethod,
+                        alignment: Alignment.center,
                         child: Text(paymentMethod.name),
                       );
                     }).toList(),
@@ -250,16 +250,22 @@ class _EditSaleViewState extends State<EditSaleView> {
                     },
                     isExpanded: true,
                   );
-                  return const CircularProgressIndicator();
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
-              height: 50,
-              child: Text("Valor final: $total"),
+            const SizedBox(height: 25),
+            Visibility(
+              visible: widget.saleParameter == null,
+              child: Container(
+                alignment: Alignment.center,
+                width: size.width * 0.7,
+                height: 50,
+                child: Text("Valor final: $total"),
+              ),
             ),
+            const SizedBox(height: 25),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () => save(),

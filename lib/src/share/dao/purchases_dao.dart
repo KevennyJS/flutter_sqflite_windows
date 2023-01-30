@@ -1,5 +1,4 @@
 import 'package:flutter_sqflite_windows/src/share/dao/sql.dart';
-import 'package:flutter_sqflite_windows/src/share/models/product_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/buy_model.dart';

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqflite_windows/src/share/dao/payment_method_dao.dart';
 import 'package:flutter_sqflite_windows/src/share/entity/googlescipt_stock_product_entity.dart';
-import 'package:flutter_sqflite_windows/src/share/models/buy_model.dart';
 import 'package:flutter_sqflite_windows/src/share/models/payment_method_model.dart';
 import 'package:flutter_sqflite_windows/src/share/models/product_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -32,8 +31,8 @@ class Mock {
     if (result > 0) debugPrint("Cliente populado");
     result = await db.rawInsert(ConnectionSQL.populatePaymentMethod());
     if (result > 0) debugPrint("Forma de pagamento populada");
-    result = await db.rawInsert(ConnectionSQL.populateProduct());
-    if (result > 0) debugPrint("Produto populado");
+    // result = await db.rawInsert(ConnectionSQL.populateProduct());
+    // if (result > 0) debugPrint("Produto populado");
     result = await db.rawInsert(ConnectionSQL.populateProvider());
     if (result > 0) debugPrint("Fornecedor populado");
     result = await db.rawInsert(ConnectionSQL.populateSale());

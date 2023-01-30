@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "bt.com.kevennyjs" "\0"
+            VALUE "CompanyName", "br.com.kevennyjs" "\0"
             VALUE "FileDescription", "flutter_sqflite_windows" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "flutter_sqflite_windows" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 bt.com.kevennyjs. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 br.com.kevennyjs. All rights reserved." "\0"
             VALUE "OriginalFilename", "flutter_sqflite_windows.exe" "\0"
             VALUE "ProductName", "flutter_sqflite_windows" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
